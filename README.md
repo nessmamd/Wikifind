@@ -1,4 +1,4 @@
-**Wikispeed runs**
+**Wikispeed runs chrome extension**
 
 Inspired by this video and these types of games: https://www.tiktok.com/@terrencepng/video/7064442878499736878?q=wikipedia%20speedruns&t=1760157591446
 
