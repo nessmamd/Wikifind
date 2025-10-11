@@ -1,0 +1,10 @@
+{
+    "manifest_version": 3,
+    "name": "Wiki Degree Game",
+    "version": "1.0",
+    "description": "A minimalist word game",
+    "action": {
+      "default_popup": "popup.html",
+      "default_title": "Wiki Degree Game"
+    }
+  }

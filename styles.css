@@ -1,0 +1,170 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  body {
+    width: 360px;
+    height: 480px;
+    background: #ffffff;
+    overflow: hidden;
+  }
+  
+  .container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 32px;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  
+  .header h1 {
+    font-size: 18px;
+    font-weight: 400;
+    color: #1a1a1a;
+    letter-spacing: -0.02em;
+  }
+  
+  .stats-btn {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    color: #999;
+  }
+  
+  .stats-btn:hover {
+    background-color: #f5f5f5;
+    color: #666;
+  }
+  
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+  }
+  
+  .word-display {
+    transition: opacity 0.2s ease;
+  }
+  
+  .word {
+    font-size: 48px;
+    font-weight: 300;
+    color: #1a1a1a;
+    text-align: center;
+    letter-spacing: -0.02em;
+  }
+  
+  .new-word-btn {
+    padding: 12px 32px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .new-word-btn:hover {
+    background: #fafafa;
+    border-color: #999;
+  }
+  
+  /* Stats Page */
+  .stats-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+  }
+  
+  .stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  
+  .stats-header h2 {
+    font-size: 20px;
+    font-weight: 400;
+    color: #1a1a1a;
+  }
+  
+  .close-btn {
+    font-size: 14px;
+    font-weight: 500;
+    color: #999;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .close-btn:hover {
+    color: #666;
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  
+  .stat-card {
+    text-align: center;
+    padding: 24px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background: white;
+  }
+  
+  .stat-value {
+    font-size: 32px;
+    font-weight: 300;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  
+  .stat-label {
+    font-size: 12px;
+    color: #999;
+    font-weight: 500;
+  }
+  
+  .total-wins {
+    text-align: center;
+    padding: 32px;
+    background: #fafafa;
+    border-radius: 12px;
+  }
+  
+  .total-wins .stat-value {
+    font-size: 40px;
+  }
+  
+  .total-wins .stat-label {
+    font-size: 13px;
+    margin-top: 8px;
+  }
