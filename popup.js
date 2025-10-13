@@ -1,12 +1,85 @@
-const words = [
-    'Serendipity', 'Ethereal', 'Luminous', 'Cascade', 'Velvet',
-    'Whisper', 'Aurora', 'Harmony', 'Zenith', 'Radiant',
-    'Nebula', 'Crystal', 'Phoenix', 'Tranquil', 'Enigma',
-    'Pristine', 'Euphoria', 'Solstice', 'Gossamer', 'Reverie',
-    'Moonlight', 'Sapphire', 'Thunder', 'Blossom', 'Infinity'
-  ];
-  
-  let currentWord = words[Math.floor(Math.random() * words.length)];
+  async function getRandomWikipediaArticle() {
+    const url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&list=random&rnnamespace=0&rnlimit=1&origin=*';
+    
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const article = data.query.random[0];
+      
+      return {
+        title: article.title,
+        id: article.id,
+        url: `https://en.wikipedia.org/wiki/${encodeURIComponent(article.title.replace(/ /g, '_'))}`
+      };
+    } catch (error) {
+      console.error('Error fetching random article:', error);
+      return null;
+    }
+  }
+
+  async function getRandomArticlePair() {
+    const startArticle = await getRandomWikipediaArticle();
+    const targetArticle = await getRandomWikipediaArticle();
+    
+    if (startArticle.id === targetArticle.id) {
+      return getRandomArticlePair();
+    }
+    
+    return {
+      start: startArticle,
+      target: targetArticle
+    };
+  }
+
+  async function testAPI() {
+    console.log('Getting random article pair...');
+    
+    const pair = await getRandomArticlePair();
+    
+    console.log('Start Article:', pair.start.title);
+    console.log('Start URL:', pair.start.url);
+    console.log('Target Article:', pair.target.title);
+    console.log('Target URL:', pair.target.url);
+    
+    return pair;
+  }
+
+  function openWikiPage(url) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.update(tabs[0].id, { url: url });
+    });
+  }
+
+  async function loadNewWords() {
+    const pairs = await getRandomArticlePair();
+    currentWord = pairs.start.title;
+    targetWord = pairs.target.title;
+    console.log('Start Article:', pairs.start.title);
+    console.log('Start URL:', pairs.start.url);
+    console.log('Target Article:', pairs.target.title);
+    console.log('Target URL:', pairs.target.url);
+
+    chrome.storage.local.set({ 
+      currentGame: {
+        startArticle: pairs.start.title,
+        targetArticle: pairs.target.title,
+        startTime: Date.now(),
+        clickCount: 0, 
+        startUrl: pairs.start.url,
+        lastUrl: pairs.target.url,
+        allUrls: []
+      }
+    });
+
+    render(); // Update the display
+  }
+
+  const words = [
+      'Loading....' 
+    ];
+
+  let currentWord = words[0];
+  let targetWord = words[0];
   let showStats = false;
   
   const stats = {
@@ -16,7 +89,24 @@ const words = [
     maxStreak: 12,
     winRate: 90
   };
-  
+
+  async function startingGame() { 
+    chrome.storage.local.get(['currentGame'], (result) => {
+      if (result.currentGame) {
+        console.log('✅ Game exists:', result.currentGame);
+        currentWord = result.currentGame.startArticle; 
+        targetWord = result.currentGame.targetArticle;
+        render(); 
+      } else {
+        console.log('❌ No game found in storage');
+        loadNewWords(); 
+      }
+    });
+  }
+
+  //calling the game to start on it
+  startingGame(); 
+
   function render() {
     const app = document.getElementById('app');
     
@@ -77,8 +167,13 @@ const words = [
             <div class="word-display" id="wordDisplay">
               <div class="word">${currentWord}</div>
             </div>
+            
+            <div class="word-display" id="wordDisplay">
+              <div class="word">${targetWord}</div>
+            </div>
   
             <button class="new-word-btn" id="newWordBtn">New Word</button>
+            <button class="new-word-btn" id="newStartGame">Start Game</button> 
           </div>
         </div>
       `;
@@ -91,13 +186,20 @@ const words = [
       document.getElementById('newWordBtn').addEventListener('click', () => {
         const wordDisplay = document.getElementById('wordDisplay');
         wordDisplay.style.opacity = '0';
-        
-        setTimeout(() => {
-          currentWord = words[Math.floor(Math.random() * words.length)];
-          wordDisplay.querySelector('.word').textContent = currentWord;
-          wordDisplay.style.opacity = '1';
-        }, 200);
+        loadNewWords(); 
       });
+
+      document.getElementById('newStartGame').addEventListener('click', () => {
+        chrome.storage.local.get(['currentGame'], (result) => {
+          if (result.currentGame) {
+            openWikiPage(result.currentGame.startUrl); 
+          } else {
+            console.log('❌ No game found in storage');
+            loadNewWords(); 
+            openWikiPage(result.currentGame.startUrl); 
+          }
+        });
+      }); 
     }
   }
   
