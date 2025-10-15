@@ -50,7 +50,25 @@
     });
   }
 
+  async function testingWords(){
+    currentWord = "Lehmbruck";
+    targetWord = "Germany";
+
+    chrome.storage.local.set({ 
+      currentGame: {
+        startArticle: currentWord,
+        targetArticle: targetWord,
+        startTime: Date.now(),
+        clickCount: 0, 
+        startUrl: "https://en.wikipedia.org/wiki/Lehmbruck",
+        lastUrl: "https://en.wikipedia.org/wiki/Germany",
+        allUrls: []
+      }
+    });
+  }
+
   async function loadNewWords() {
+    // testingWords(); 
     const pairs = await getRandomArticlePair();
     currentWord = pairs.start.title;
     targetWord = pairs.target.title;
@@ -107,9 +125,10 @@
   //calling the game to start on it
   startingGame(); 
 
-  function render() {
+async function render() {
     const app = document.getElementById('app');
-    
+  
+
     if (showStats) {
       app.innerHTML = `
         <div class="stats-container">
@@ -193,6 +212,8 @@
         chrome.storage.local.get(['currentGame'], (result) => {
           if (result.currentGame) {
             openWikiPage(result.currentGame.startUrl); 
+            result.currentGame.allUrls = [];
+            result.currentGame.clickCount = 0;
           } else {
             console.log('❌ No game found in storage');
             loadNewWords(); 

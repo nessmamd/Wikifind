@@ -2,10 +2,21 @@
   "manifest_version": 3,
   "name": "Wiki Degree Game",
   "version": "1.0",
-  "description": "A minimalist word game",
-  "permissions": ["tabs", "storage"],
+  "permissions": ["storage", "tabs"],
   "action": {
-    "default_popup": "popup.html",
-    "default_title": "Wiki Degree Game"
-  }
+    "default_popup": "popup.html", 
+    "default_icon": {
+      "128": "icons/image.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.wikipedia.org/wiki/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
 }
